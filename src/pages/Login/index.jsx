@@ -10,6 +10,8 @@ import Header from '../../components/Header'
 import Input from '../../components/Input/index'
 import { Column, Container, CriarText, EsqueciText, Row, SubTitleLogin, Title, TitleLogin, Wrapper } from './styles'
 
+import { api } from "../../services/api";
+
 
 const schema = yup.object({
   email: yup.string().email('E-mail inválido').required("Campo obrigatório"),
@@ -17,20 +19,27 @@ const schema = yup.object({
 }).required();
 
 export default function Login() {
+  const navigate = useNavigate();
 
-  const { control, handleSubmit, formState: { errors, isValid } } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver:yupResolver(schema),
     //valida a cada caractere digitado
     mode: 'onChange'
   });
-  console.log(isValid, errors);
 
-  const onSubmit = data => console.log(data);
-
-  const navigate = useNavigate();
-  const handleClickSignIn = () => {
-    navigate('/login')
-  }
+  const onSubmit = async formData => {
+    try {
+      const { data } = await api.get(`users?email=${formData.email}&senha=${formData.password}`);
+      if(data.length === 1) {
+        navigate('/feed')
+      } else {
+        alert('email ou senha inválido!')
+      }
+    }
+    catch{
+      alert('Houve um erro, tente novamente!')
+    }
+  };
 
   return (
     <>
