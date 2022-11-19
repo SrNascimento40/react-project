@@ -10,8 +10,9 @@ import {
   BuscarInput
 } from "./styles";
 import Button from "../Button";
+import { IHeader } from './types';
 
-export default function Header({autenticado}) {
+export default function Header({autenticado}:IHeader) {
   return (
     <Wrapper>
       <Container>

@@ -11,6 +11,7 @@ import Input from '../../components/Input/index'
 import { Column, Container, CriarText, EsqueciText, Row, SubTitleLogin, Title, TitleLogin, Wrapper } from './styles'
 
 import { api } from "../../services/api";
+import { IFormData } from './types';
 
 
 const schema = yup.object({
@@ -21,13 +22,13 @@ const schema = yup.object({
 export default function Login() {
   const navigate = useNavigate();
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm<IFormData>({
     resolver:yupResolver(schema),
     //valida a cada caractere digitado
     mode: 'onChange'
   });
 
-  const onSubmit = async formData => {
+  const onSubmit = async (formData: IFormData) => {
     try {
       const { data } = await api.get(`users?email=${formData.email}&senha=${formData.password}`);
       if(data.length === 1) {
